@@ -37,7 +37,7 @@ static int __stdcall BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM, LPARAM pDa
 UINT OptionDlg::doDialog(tExProp *prop)
 {
 	_pProp = prop;
-	return ::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_OPTION_DLG), _hParent,  (DLGPROC)dlgProc, (LPARAM)this);
+	return ( UINT )::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_OPTION_DLG), _hParent,  (DLGPROC)dlgProc, (LPARAM)this);
 }
 
 
@@ -150,7 +150,7 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 					::WriteFile(hFile, szBOM, sizeof(szBOM), &dwByteWritten, NULL);
 #endif
 					for (INT i = 0; i < MAX_NPP_EXAMPLE_LINE; i++)
-						::WriteFile(hFile, szExampleScript[i], _tcslen(szExampleScript[i]) * sizeof(TCHAR), &dwByteWritten, NULL);
+						::WriteFile(hFile, szExampleScript[i], ( DWORD )_tcslen(szExampleScript[i]) * sizeof(TCHAR), &dwByteWritten, NULL);
 
 					::CloseHandle(hFile);
 					break;

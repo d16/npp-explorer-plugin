@@ -1,4 +1,4 @@
-//this file is part of notepad++
+ï»¿//this file is part of notepad++
 //Copyright (C)2003 Don HO <donho@altern.org>
 //
 //This program is free software; you can redistribute it and/or
@@ -193,7 +193,7 @@
 	#define	IDM_FILE_DELETE		     	(IDM_FILE + 16)
 	#define	IDM_FILE_RENAME		     	(IDM_FILE + 17)
  
- // A mettre à jour si on ajoute nouveau menu item dans le menu "File"
+ // A mettre ?jour si on ajoute nouveau menu item dans le menu "File"
 	#define	IDM_FILEMENU_LASTONE	IDM_FILE_RENAME
  
 #define	IDM_EDIT       (IDM + 2000)

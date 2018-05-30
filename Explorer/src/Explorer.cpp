@@ -197,7 +197,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 
 			/* Remove subclaasing */
 			if (wndProcNotepad != NULL)
-				SetWindowLongPtr(nppData._nppHandle, GWL_WNDPROC, (LONG)wndProcNotepad);
+				SetWindowLongPtr(nppData._nppHandle, GWLP_WNDPROC, (LONG_PTR)wndProcNotepad);
 
 			FreeLibrary(hShell32);
 	
@@ -244,7 +244,7 @@ extern "C" __declspec(dllexport) void setInfo(NppData notpadPlusData)
 	helpDlg.init((HINSTANCE)g_hModule, nppData);
 
 	/* Subclassing for Notepad */
-	wndProcNotepad = (WNDPROC)SetWindowLongPtr(nppData._nppHandle, GWL_WNDPROC, (LPARAM)SubWndProcNotepad);
+	wndProcNotepad = (WNDPROC)SetWindowLongPtr(nppData._nppHandle, GWLP_WNDPROC, (LONG_PTR)SubWndProcNotepad);
 }
 
 extern "C" __declspec(dllexport) LPCTSTR getName()
@@ -324,7 +324,7 @@ extern "C" __declspec(dllexport) BOOL isUnicode()
  */
 UINT ScintillaMsg(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return ::SendMessage(g_HSource, message, wParam, lParam);
+	return ( UINT )::SendMessage(g_HSource, message, wParam, lParam);
 }
 
 /***
@@ -346,7 +346,7 @@ void loadSettings(void)
 			::PathRemoveFileSpec(configPath);
 		} while (::PathFileExists(configPath) == FALSE);
 
-		for (INT i = vPaths.size()-1; i >= 0; i--)
+		for (size_t i = vPaths.size()-1; i >= 0; i--)
 		{
 			_tcscpy(configPath, vPaths[i].c_str());
 			::CreateDirectory(configPath, NULL);
@@ -441,7 +441,7 @@ void saveSettings(void)
 	::WritePrivateProfileString(Explorer, NppExecAppName, exProp.nppExecProp.szAppName, iniFilePath);
 	::WritePrivateProfileString(Explorer, NppExecScriptPath, exProp.nppExecProp.szScriptPath, iniFilePath);
 
-	for (INT i = exProp.vStrFilterHistory.size() - 1; i >= 0 ; i--)
+	for (int i = ( int )exProp.vStrFilterHistory.size() - 1; i >= 0 ; i--)
 	{
 		::WritePrivateProfileString(FilterHistory, _itot(i, temp, 10), exProp.vStrFilterHistory[i].c_str(), iniFilePath);
 	}
@@ -730,7 +730,7 @@ void ExtractIcons(LPCTSTR currentPath, LPCTSTR volumeName, eDevType type,
 	LPINT piIconNormal, LPINT piIconSelected, LPINT piIconOverlayed)
 {
 	SHFILEINFO		sfi	= {0};
-	UINT			length = _tcslen(currentPath) - 1;
+	UINT			length = ( UINT )_tcslen(currentPath) - 1;
 	TCHAR			TEMP[MAX_PATH];
 	UINT			stOverlay = (piIconOverlayed ? SHGFI_OVERLAYINDEX : 0);
 
@@ -868,7 +868,7 @@ void ExtractIcons(LPCTSTR currentPath, LPCTSTR volumeName, eDevType type,
 	}
 
 	if (_tcsstr(TEMP, _T("C:\\Users\\Public\\"))) {
-		_stprintf(TEMP, _T("  TYPE   %d\n  Normal %d\n  Selected %d\n"), *piIconNormal, *piIconSelected);
+		_stprintf(TEMP, _T("  TYPE   Normal %d\n  Selected %d\n"), *piIconNormal, *piIconSelected);
 		OutputDebugString(TEMP);
 	}
 }

@@ -48,11 +48,11 @@ static LRESULT CALLBACK hookProcMouse(INT nCode, WPARAM wParam, LPARAM lParam)
 		{
 			case WM_MOUSEMOVE:
 			case WM_NCMOUSEMOVE:
-				::PostMessage(hWndServer, wParam, 0, 0);
+				::PostMessage(hWndServer, ( UINT )wParam, 0, 0);
 				break;
 			case WM_LBUTTONUP:
 			case WM_NCLBUTTONUP:
-				::PostMessage(hWndServer, wParam, 0, 0);
+				::PostMessage(hWndServer, ( UINT )wParam, 0, 0);
 				return TRUE;
 			default: 
 				break;
@@ -145,7 +145,7 @@ void FileList::init(HINSTANCE hInst, HWND hParent, HWND hParentList)
 
 	/* subclass list control */
 	lpFileListClass = this;
-	_hDefaultListProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(_hSelf, GWL_WNDPROC, reinterpret_cast<LONG>(wndDefaultListProc)));
+	_hDefaultListProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(_hSelf, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndDefaultListProc)));
 
 	/* set image list and icon */
 	_hImlParent = GetSmallImageList(FALSE);
@@ -154,7 +154,7 @@ void FileList::init(HINSTANCE hInst, HWND hParent, HWND hParentList)
 
 	/* get header control and subclass it */
 	hWndServer = _hHeader = ListView_GetHeader(_hSelf);
-	_hDefaultHeaderProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(_hHeader, GWL_WNDPROC, reinterpret_cast<LONG>(wndDefaultHeaderProc)));
+	_hDefaultHeaderProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(_hHeader, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndDefaultHeaderProc)));
 
 	/* set here the columns */
 	SetColumns();
@@ -192,7 +192,7 @@ LRESULT FileList::runListProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPa
 		}
 		case WM_CHAR:
 		{
-			CHAR	charkey = (CHAR)tolower(wParam);
+			CHAR	charkey = (CHAR)tolower( ( int )wParam);
 
 			/* do selection of items by user keyword typing or cut/copy/paste */
 			switch (charkey) {
@@ -415,7 +415,7 @@ LRESULT FileList::runListProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPa
 				{
 					UINT	mkInd = (0x80 & ::GetKeyState(VK_SHIFT) ? MK_SHIFT : 0) | (0x80 & ::GetKeyState(VK_CONTROL) ? MK_CONTROL : 0);
 					LPLVHITTESTINFO	phtt = (LPLVHITTESTINFO)lParam;
-					::PostMessage(_hSelf, wParam, mkInd, MAKELONG(phtt->pt.x, phtt->pt.y));
+					::PostMessage(_hSelf, ( UINT )wParam, mkInd, MAKELONG(phtt->pt.x, phtt->pt.y));
 
 					onLMouseBtnDbl();
 					break;
@@ -425,7 +425,7 @@ LRESULT FileList::runListProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPa
 				{
 					UINT	mkInd = (0x80 & ::GetKeyState(VK_SHIFT) ? MK_SHIFT : 0) | (0x80 & ::GetKeyState(VK_CONTROL) ? MK_CONTROL : 0);
 					LPLVHITTESTINFO	phtt = (LPLVHITTESTINFO)lParam;
-					::PostMessage(_hSelf, wParam, mkInd, MAKELONG(phtt->pt.x, phtt->pt.y));
+					::PostMessage(_hSelf, ( UINT )wParam, mkInd, MAKELONG(phtt->pt.x, phtt->pt.y));
 					break;
 				}
     			case WM_RBUTTONUP:
@@ -580,7 +580,7 @@ BOOL FileList::notify(WPARAM wParam, LPARAM lParam)
 
 					ReadArrayToList(str, lvItem.iItem ,lvItem.iSubItem);
 					lvItem.pszText		= str;
-					lvItem.cchTextMax	= _tcslen(str);
+					lvItem.cchTextMax	= ( int )_tcslen(str);
 				}
 				break;
 			}
@@ -675,12 +675,12 @@ BOOL FileList::notify(WPARAM wParam, LPARAM lParam)
 				{
 					case CDDS_PREPAINT:
 					{
-						SetWindowLongPtr(_hParent, DWL_MSGRESULT, (LONG)(CDRF_NOTIFYITEMDRAW));
+						SetWindowLongPtr(_hParent, DWLP_MSGRESULT, ( LONG_PTR )(CDRF_NOTIFYITEMDRAW));
 						return TRUE;
 					}
 					case CDDS_ITEMPREPAINT:
 					{
-						SetWindowLongPtr(_hParent, DWL_MSGRESULT, (LONG)(CDRF_NOTIFYSUBITEMDRAW));
+						SetWindowLongPtr(_hParent, DWLP_MSGRESULT, ( LONG_PTR )(CDRF_NOTIFYSUBITEMDRAW));
 						return TRUE;
 					}
 					case CDDS_ITEMPREPAINT | CDDS_SUBITEM:
@@ -759,7 +759,7 @@ BOOL FileList::notify(WPARAM wParam, LPARAM lParam)
 							::SetTextColor(hMemDc, fgColor);
 
 						/* draw text to memory */
-						::DrawText(hMemDc, text, _tcslen(text), &rcName, DT_LEFT | DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS | DT_NOPREFIX);
+						::DrawText(hMemDc, text, ( int )_tcslen(text), &rcName, DT_LEFT | DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS | DT_NOPREFIX);
 
 						/* blit text */
 						::BitBlt(lpCD->nmcd.hdc, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, hMemDc, rc.left, rc.top, SRCCOPY);
@@ -799,7 +799,7 @@ BOOL FileList::notify(WPARAM wParam, LPARAM lParam)
 						::DeleteObject(hBmp);
 						::DeleteDC(hMemDc);
 
-						SetWindowLongPtr(_hParent, DWL_MSGRESULT, (LONG)(CDRF_SKIPDEFAULT));
+						SetWindowLongPtr(_hParent, DWLP_MSGRESULT, CDRF_SKIPDEFAULT);
 						return TRUE;
 					}
 					default:
@@ -822,7 +822,7 @@ BOOL FileList::notify(WPARAM wParam, LPARAM lParam)
 				::GetCursorPos(&pt);
 				_lMouseTrackPos = pt.x;
 				_iMouseTrackItem = ((LPNMHEADER)lParam)->iItem;
-				SetWindowLongPtr(_hParent, DWL_MSGRESULT, TRUE);
+				SetWindowLongPtr(_hParent, DWLP_MSGRESULT, TRUE);
 
 				/* start hooking */
 				if (gWinVersion < WV_NT) {
@@ -865,7 +865,7 @@ BOOL FileList::notify(WPARAM wParam, LPARAM lParam)
 						} else {
 							_tcscpy(pszItemText, _vFileList[i].strName.c_str());
 						}
-						::GetTextExtentPoint32(hDc, pszItemText, _tcslen(pszItemText), &size);
+						::GetTextExtentPoint32(hDc, pszItemText, ( int )_tcslen(pszItemText), &size);
 
 						if (iWidthMax < size.cx)
 							iWidthMax = size.cx;
@@ -875,7 +875,7 @@ BOOL FileList::notify(WPARAM wParam, LPARAM lParam)
 					ListView_SetColumnWidth(_hSelf, 0, iWidthMax + 24);
 					_lMouseTrackPos = 0;
 					
-					SetWindowLongPtr(_hParent, DWL_MSGRESULT, TRUE);
+					SetWindowLongPtr(_hParent, DWLP_MSGRESULT, TRUE);
 					return TRUE;
 				}
 				break;
@@ -920,7 +920,7 @@ void FileList::ShowToolTip(const LVHITTESTINFO & hittest)
 				} else {
 					_tcscpy(pszItemText, _vFileList[hittest.iItem].strName.c_str());
 				}
-				::GetTextExtentPoint32(hDc, pszItemText, _tcslen(pszItemText), &size);
+				::GetTextExtentPoint32(hDc, pszItemText, ( int )_tcslen(pszItemText), &size);
 				width = size.cx;
 
 				SelectObject(hDc, hDefFont);
@@ -1210,8 +1210,8 @@ void FileList::viewPath(LPCTSTR currentPath, BOOL redraw)
 	}
 
 	/* set max elements in list */
-	_uMaxFolders	= vFoldersTemp.size();
-	_uMaxElements	= _uMaxFolders + vFilesTemp.size();
+	_uMaxFolders	= ( UINT )vFoldersTemp.size();
+	_uMaxElements	= _uMaxFolders + ( UINT )vFilesTemp.size();
 	vFoldersTemp.clear();
 	vFilesTemp.clear();
 
@@ -1320,11 +1320,11 @@ void FileList::SetColumns(void)
 	ColSetup.mask		= LVCF_TEXT | LVCF_FMT | LVCF_WIDTH;
 	ColSetup.fmt		= LVCFMT_LEFT;
 	ColSetup.pszText	= cColumns[0];
-	ColSetup.cchTextMax = _tcslen(cColumns[0]);
+	ColSetup.cchTextMax = ( int )_tcslen(cColumns[0]);
 	ColSetup.cx			= _pExProp->iColumnPosName;
 	ListView_InsertColumn(_hSelf, 0, &ColSetup);
 	ColSetup.pszText	= cColumns[1];
-	ColSetup.cchTextMax = _tcslen(cColumns[1]);
+	ColSetup.cchTextMax = ( int )_tcslen(cColumns[1]);
 	ColSetup.cx			= _pExProp->iColumnPosExt;
 	ListView_InsertColumn(_hSelf, 1, &ColSetup);
 
@@ -1332,12 +1332,12 @@ void FileList::SetColumns(void)
 	{
 		ColSetup.fmt		= LVCFMT_RIGHT;
 		ColSetup.pszText	= cColumns[2];
-		ColSetup.cchTextMax = _tcslen(cColumns[2]);
+		ColSetup.cchTextMax = ( int )_tcslen(cColumns[2]);
 		ColSetup.cx			= _pExProp->iColumnPosSize;
 		ListView_InsertColumn(_hSelf, 2, &ColSetup);
 		ColSetup.fmt		= LVCFMT_LEFT;
 		ColSetup.pszText	= cColumns[3];
-		ColSetup.cchTextMax = _tcslen(cColumns[3]);
+		ColSetup.cchTextMax = ( int )_tcslen(cColumns[3]);
 		ColSetup.cx			= _pExProp->iColumnPosDate;
 		ListView_InsertColumn(_hSelf, 3, &ColSetup);
 	}
@@ -1536,7 +1536,7 @@ void FileList::onPaste(void)
 
 void FileList::onDelete(bool immediate)
 {
-	UINT	lengthPath	= _tcslen(_pExProp->szCurrentPath);
+	UINT	lengthPath	= ( UINT )_tcslen(_pExProp->szCurrentPath);
 	UINT	bufSize		= ListView_GetSelectedCount(_hSelf) * MAX_PATH;
 	LPTSTR	lpszFiles	= new TCHAR[bufSize];
 	::ZeroMemory(lpszFiles, bufSize);
@@ -1552,7 +1552,7 @@ void FileList::onDelete(bool immediate)
 			}
 			_tcscpy(&lpszFiles[offset], _pExProp->szCurrentPath);
 			_tcscpy(&lpszFiles[offset+lengthPath], _vFileList[i].strNameExt.c_str());
-			offset += lengthPath + _vFileList[i].strNameExt.size() + 1;
+			offset += lengthPath + ( UINT )_vFileList[i].strNameExt.size() + 1;
 		}
 	}
 
@@ -2206,14 +2206,14 @@ void FileList::SetItems(vector<string> vStrItems)
  */
 void FileList::FolderExChange(CIDropSource* pdsrc, CIDataObject* pdobj, UINT dwEffect)
 {
-	UINT	parsz = _tcslen(_pExProp->szCurrentPath);
+	UINT	parsz = ( UINT )_tcslen(_pExProp->szCurrentPath);
 	UINT	bufsz = sizeof(DROPFILES) + sizeof(TCHAR);
 
 	/* get buffer size */
 	for (UINT i = 0; i < _uMaxElements; i++) {
 		if (ListView_GetItemState(_hSelf, i, LVIS_SELECTED) == LVIS_SELECTED) {
 			if ((i == 0) && (_vFileList[i].bParent == TRUE)) continue;
-			bufsz += (parsz + _vFileList[i].strNameExt.size() + 1) * sizeof(TCHAR);
+			bufsz += (parsz + ( UINT )_vFileList[i].strNameExt.size() + 1) * sizeof(TCHAR);
 		}
 	}
 
@@ -2251,7 +2251,7 @@ void FileList::FolderExChange(CIDropSource* pdsrc, CIDataObject* pdobj, UINT dwE
 			}
 			_tcscpy(&szPath[offset], _pExProp->szCurrentPath);
 			_tcscpy(&szPath[offset+parsz], _vFileList[i].strNameExt.c_str());
-			offset += parsz + _vFileList[i].strNameExt.size() + 1;
+			offset += parsz + ( UINT )_vFileList[i].strNameExt.size() + 1;
 		}
 	}
 
@@ -2343,7 +2343,7 @@ bool FileList::doPaste(LPCTSTR pszTo, LPDROPFILES hData, const DWORD & dwEffect)
 {
 	/* get files from and to, to fill struct */
 	UINT		headerSize				= sizeof(DROPFILES);
-	UINT		payloadSize				= ::GlobalSize(hData) - headerSize;
+	UINT		payloadSize			= ( UINT )::GlobalSize(hData) - headerSize;
 	LPVOID		pPld					= (LPBYTE)hData + headerSize;
 	LPTSTR		lpszFilesFrom			= NULL;
 

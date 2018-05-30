@@ -52,7 +52,7 @@ UINT PropDlg::doDialog(LPTSTR pName, LPTSTR pLink, LPTSTR pDesc, eLinkDlg linkDl
 	_pDesc			= pDesc;
 	_linkDlg		= linkDlg;
 	_fileMustExist	= fileMustExist;
-	return ::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_PROP_DLG), _hParent,  (DLGPROC)dlgProc, (LPARAM)this);
+	return ( UINT )::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_PROP_DLG), _hParent,  (DLGPROC)dlgProc, (LPARAM)this);
 }
 
 
@@ -265,8 +265,8 @@ BOOL CALLBACK PropDlg::run_dlgProc(HWND hWnd, UINT Message, WPARAM wParam, LPARA
 				}
 				case IDOK:
 				{
-					UINT	lengthName	= ::SendDlgItemMessage(_hSelf, IDC_EDIT_NAME, WM_GETTEXTLENGTH, 0, 0) + 1;
-					UINT	lengthLink	= ::SendDlgItemMessage(_hSelf, IDC_EDIT_LINK, WM_GETTEXTLENGTH, 0, 0) + 1;
+					UINT	lengthName	= ( UINT )::SendDlgItemMessage(_hSelf, IDC_EDIT_NAME, WM_GETTEXTLENGTH, 0, 0) + 1;
+					UINT	lengthLink	= ( UINT )::SendDlgItemMessage(_hSelf, IDC_EDIT_LINK, WM_GETTEXTLENGTH, 0, 0) + 1;
 
 					SendDlgItemMessage(_hSelf, IDC_EDIT_NAME, WM_GETTEXT, lengthName, (LPARAM)_pName);
 					SendDlgItemMessage(_hSelf, IDC_EDIT_LINK, WM_GETTEXT, lengthLink, (LPARAM)_pLink);

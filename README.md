@@ -1,22 +1,17 @@
-# npp-explorer-plugin
-This is a modified version of the [Explorer] plugin for [Notepad++].
+# npp-explorer-plugin介绍
+这是基于[Explorer]修改的[Notepad++]插件，只能用于x64版Notepad++。
 
-The goal was:
-- to fix an annoying bug that caused the toolbar's tooltip of the plugin to display garbage text.
-- make the fg/bg colors of the listview and the treeview in the plugin to always match the current Notepad++ theme.
+目标只有一个：
+- 供x64版Notepad++使用 
 
-## Installation
-For now you can just drop the **Explorer.dll** into NPP's plugins folder -
+## 安装
+把生成的**Explorer.dll**复制到Notepad++的插件目录中：
 
-`C:\Program Files (x86)\Notepad++\plugins`
-
-## Screenshot
-![screenshot]
+`C:\Program Files\Notepad++\plugins\`
 
 <sub>This project is licensed under the terms of the GNU GPL v2.0 license<br/>
 See [here][original] for the original license as published by the author of this plugin</sub>
 
 [Explorer]: http://sourceforge.net/projects/npp-plugins/files/Explorer/
-[Notepad++]: http://notepad-plus-plus.org/
-[screenshot]: https://github.com/kobilutil/npp-explorer-plugin/raw/master/images/screenshot.png "Screenshot"
-[original]: https://github.com/kobilutil/npp-explorer-plugin/tree/master/Explorer
+[Notepad++]: https://notepad-plus-plus.org/
+[original]: https://github.com/d16/npp-explorer-plugin/tree/master/Explorer

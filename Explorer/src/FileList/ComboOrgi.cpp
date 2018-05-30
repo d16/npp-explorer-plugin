@@ -42,8 +42,8 @@ void ComboOrgi::init(HWND hCombo)
 	comboBoxInfo.cbSize = sizeof(COMBOBOXINFO);
 
 	::SendMessage(_hCombo, CB_GETCOMBOBOXINFO, 0, (LPARAM)&comboBoxInfo);
-	::SetWindowLongPtr(comboBoxInfo.hwndItem, GWL_USERDATA, reinterpret_cast<LONG>(this));
-	_hDefaultComboProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(comboBoxInfo.hwndItem, GWL_WNDPROC, reinterpret_cast<LONG>(wndDefaultProc)));
+	::SetWindowLongPtr(comboBoxInfo.hwndItem, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+	_hDefaultComboProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(comboBoxInfo.hwndItem, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndDefaultProc)));
 }
 
 
@@ -73,7 +73,7 @@ LRESULT ComboOrgi::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam
 void ComboOrgi::addText(LPTSTR pszText)
 {
 	/* find item */
-	INT		count		= _comboItems.size();
+	INT		count		= (int)_comboItems.size();
 	INT		i			= 0;
 	INT		hasFoundOn	= -1;
 
@@ -112,7 +112,7 @@ void ComboOrgi::getText(LPTSTR pszText, UINT size)
 
 bool ComboOrgi::getSelText(LPTSTR pszText)
 {
-	INT		curSel = ::SendMessage(_hCombo, CB_GETCURSEL, 0, 0);
+	LRESULT curSel = ::SendMessage(_hCombo, CB_GETCURSEL, 0, 0);
 
 	if (curSel != CB_ERR)
 	{

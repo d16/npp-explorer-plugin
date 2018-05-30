@@ -142,7 +142,7 @@ void TreeHelper::DrawChildren(HTREEITEM parentItem)
 		::FindClose(hFind);
 
 		/* sort data */
-		QuickSortItems(&vFolderList, 0, vFolderList.size()-1);
+		QuickSortItems(&vFolderList, 0, ( INT )vFolderList.size()-1);
 	 
 		for (iCnt = 0; iCnt < vFolderList.size(); iCnt++)
 		{
@@ -226,7 +226,7 @@ void TreeHelper::UpdateChildren(LPTSTR pszParentPath, HTREEITEM hParentItem, BOO
 		::FindClose(hFind);
 
 		/* sort data */
-		QuickSortItems(&vFolderList, 0, vFolderList.size()-1);
+		QuickSortItems(&vFolderList, 0, ( INT )vFolderList.size()-1);
 
 		/* update tree */
 		for (iCnt = 0; iCnt < vFolderList.size(); iCnt++)

@@ -169,7 +169,7 @@ UINT ContextMenu::ShowContextMenu(HINSTANCE hInst, HWND hWndNpp, HWND hWndParent
 		g_OldWndProc	= NULL;
 		if (iMenuType > 1)	// only subclass if its version 2 or 3
 		{
-			g_OldWndProc = (WNDPROC)::SetWindowLongPtr (hWndParent, GWL_WNDPROC, (DWORD) HookWndProc);
+			g_OldWndProc = (WNDPROC)::SetWindowLongPtr (hWndParent, GWLP_WNDPROC, (LONG_PTR) HookWndProc);
 			if (iMenuType == 2)
 				g_IContext2 = (LPCONTEXTMENU2) pContextMenu;
 			else	// version 3
@@ -255,7 +255,7 @@ UINT ContextMenu::ShowContextMenu(HINSTANCE hInst, HWND hWndNpp, HWND hWndParent
 		if (_strNppScripts.size() != 0)
 			::AppendMenu(hMenuNppExec, MF_SEPARATOR, 0, NULL);
 		::AppendMenu(hMenuNppExec, MF_STRING, CTX_GOTO_SCRIPT_PATH, _T("Go to script folder"));
-		::AppendMenu(hMainMenu, MF_STRING | MF_POPUP, (UINT)hMenuNppExec, _T("NppExec Script(s)"));
+		::AppendMenu(hMainMenu, MF_STRING | MF_POPUP, (UINT_PTR)hMenuNppExec, _T("NppExec Script(s)"));
 	}
 	else
 	{
@@ -310,7 +310,7 @@ UINT ContextMenu::ShowContextMenu(HINSTANCE hInst, HWND hWndNpp, HWND hWndParent
 			if (!NLGetText(_hInst, _hWndNpp, _T("Standard Menu"), szMenuName, MAX_PATH)) {
 				_tcscpy(szMenuName, _T("Standard Menu"));
 			}
-			::InsertMenu(hMainMenu, 4, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT)_hMenu, szMenuName);
+			::InsertMenu(hMainMenu, 4, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)_hMenu, szMenuName);
 			::InsertMenu(hMainMenu, (dwExecVer >= 0x02F5 ? 7 : 6), MF_BYPOSITION | MF_SEPARATOR, 0, 0);
 		}
 		else
@@ -348,7 +348,7 @@ UINT ContextMenu::ShowContextMenu(HINSTANCE hInst, HWND hWndNpp, HWND hWndParent
 
 	if ((_pidlArray != NULL) && (g_OldWndProc != NULL)) // unsubclass
 	{
-		::SetWindowLongPtr(hWndParent, GWL_WNDPROC, (DWORD) g_OldWndProc);
+		::SetWindowLongPtr(hWndParent, GWLP_WNDPROC, (LONG_PTR) g_OldWndProc);
 	}
 
 	// see if returned idCommand belongs to shell menu entries but not for renaming (19)
@@ -517,7 +517,7 @@ void ContextMenu::SetObjects(vector<string> strArray)
 		// we now have the IShellFolder interface to every objects parent folder
 		
 		IShellFolder * psfFolder = NULL;
-		_nItems = strArray.size();
+		_nItems = ( int )strArray.size();
 		for (int i = 0; i < _nItems; i++)
 		{
 #ifndef _UNICODE
@@ -551,7 +551,7 @@ void ContextMenu::FreePIDLArray(LPITEMIDLIST *pidlArray)
 	if (!pidlArray)
 		return;
 
-	int iSize = _msize (pidlArray) / sizeof (LPITEMIDLIST);
+	int iSize = ( int )_msize (pidlArray) / sizeof (LPITEMIDLIST);
 
 	for (int i = 0; i < iSize; i++)
 		free (pidlArray[i]);
@@ -623,7 +623,7 @@ HRESULT ContextMenu::SHBindToParentEx (LPCITEMIDLIST pidl, REFIID riid, VOID **p
 
 	LPBYTE pRel = GetPIDLPos (pidl, nCount - 1);
 	LPITEMIDLIST pidlParent = NULL;
-	pidlParent = CopyPIDL (pidl, pRel - (LPBYTE) pidl);
+	pidlParent = CopyPIDL (pidl, ( int )(pRel - (LPBYTE) pidl));
 	IShellFolder * psfFolder = NULL;
 	
 	if ((hr = psfDesktop->BindToObject (pidlParent, NULL, __uuidof (psfFolder), (void **) &psfFolder)) != S_OK)
@@ -849,7 +849,7 @@ void ContextMenu::openPrompt(void)
 		/* is file */
 		if (_strArray[i][_strArray[i].size()-1] != '\\')
 		{
-			UINT	pos		= _strArray[i].rfind(_T("\\"), _strArray[i].size()-1);
+			UINT pos = ( UINT )_strArray[i].rfind(_T("\\"), _strArray[i].size()-1);
 			_strArray[i].erase(pos, _strArray[i].size());
 		}
 		::ShellExecute(_hWndNpp, _T("open"), _T("cmd.exe"), NULL, _strArray[i].c_str(), SW_SHOW);
@@ -886,7 +886,7 @@ void ContextMenu::addFileNamesCB(void)
 	string	temp;
 	for (UINT i = 0; i < _strArray.size(); i++)
 	{
-		UINT	pos		= _strArray[i].rfind(_T("\\"), _strArray[i].size()-1);
+		UINT pos = ( UINT )_strArray[i].rfind(_T("\\"), _strArray[i].size()-1);
 
 		if (pos != -1)
 		{
@@ -894,7 +894,7 @@ void ContextMenu::addFileNamesCB(void)
 
 			/* is folder */
 			if (_strArray[i][_strArray[i].size()-1] == '\\') {
-				pos	= _strArray[i].rfind(_T("\\"), pos-1);
+				pos	= ( UINT )_strArray[i].rfind(_T("\\"), pos-1);
 				_strArray[i].erase(0, pos);
 				_strArray[i].erase(_strArray[i].size()-1);
 			} else {

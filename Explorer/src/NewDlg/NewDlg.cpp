@@ -25,7 +25,7 @@ UINT NewDlg::doDialog(LPTSTR pFileName, LPTSTR pDesc)
 {
 	_pFileName = pFileName;
 	_pDesc = pDesc;
-	return ::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_NEW_DLG), _hParent,  (DLGPROC)dlgProc, (LPARAM)this);
+	return ( UINT )::DialogBoxParam(_hInst, MAKEINTRESOURCE(IDD_NEW_DLG), _hParent,  (DLGPROC)dlgProc, (LPARAM)this);
 }
 
 
@@ -61,7 +61,7 @@ BOOL CALLBACK NewDlg::run_dlgProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM
 					return TRUE;
 				case IDOK:
 				{
-					UINT	length	= ::SendDlgItemMessage(_hSelf, IDC_EDIT_NEW, WM_GETTEXTLENGTH, 0, 0) + 1;
+					UINT length	= ( UINT )::SendDlgItemMessage(_hSelf, IDC_EDIT_NEW, WM_GETTEXTLENGTH, 0, 0) + 1;
 
 					SendDlgItemMessage(_hSelf, IDC_EDIT_NEW, WM_GETTEXT, length, (LPARAM)_pFileName);
 					::EndDialog(_hSelf, TRUE);

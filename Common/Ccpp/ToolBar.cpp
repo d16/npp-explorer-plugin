@@ -52,7 +52,7 @@ bool ToolBar::init( HINSTANCE hInst, HWND hPere, toolBarStatusType type,
 		if (cmd != 0)
 		{
 			bmpIndex++;
-			style = BTNS_BUTTON | _toolBarIcons.getIconStyle(i);
+			style = BTNS_BUTTON | _toolBarIcons.getIconStyle((int)i);
 		}
 		else
 		{
@@ -85,7 +85,7 @@ bool ToolBar::init( HINSTANCE hInst, HWND hPere, toolBarStatusType type,
 			_pTBB[i].iBitmap = bmpIndex;
 			_pTBB[i].idCommand = cmd;
 			_pTBB[i].fsState = TBSTATE_ENABLED;
-			_pTBB[i].fsStyle = BTNS_BUTTON | _toolBarIcons.getIconStyle(i); 
+			_pTBB[i].fsStyle = BTNS_BUTTON | _toolBarIcons.getIconStyle( ( int )i);
 			_pTBB[i].dwData = 0; 
 			_pTBB[i].iString = 0;
 		}
@@ -177,7 +177,7 @@ void ToolBar::reset(bool create)
 		TBADDBITMAP addbmpdyn = {0, 0};
 		for (size_t i = 0 ; i < _nrButtons ; i++)
 		{
-			addbmp.nID = _toolBarIcons.getStdIconAt(i);
+			addbmp.nID = _toolBarIcons.getStdIconAt( ( int )i);
 			::SendMessage(_hSelf, TB_ADDBITMAP, 1, (LPARAM)&addbmp);
 		}
 		if (_nrDynButtons > 0) {
