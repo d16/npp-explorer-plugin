@@ -64,7 +64,7 @@ CONST TCHAR SplitterPosHor[]	= _T("SplitterPosHor");
 CONST TCHAR SortAsc[]			= _T("SortAsc");
 CONST TCHAR SortPos[]			= _T("SortPos");
 CONST TCHAR ColPosName[]		= _T("ColPosName");
-CONST TCHAR ColPosExt[]			= _T("ColPosExt");
+CONST TCHAR ColPosExt[]		= _T("ColPosExt");
 CONST TCHAR ColPosSize[]		= _T("ColPosSize");
 CONST TCHAR ColPosDate[]		= _T("ColPosDate");
 CONST TCHAR ShowHiddenData[]	= _T("ShowHiddenData");
@@ -74,7 +74,7 @@ CONST TCHAR AddExtToName[]		= _T("AddExtToName");
 CONST TCHAR AutoUpdate[]		= _T("AutoUpdate");
 CONST TCHAR SizeFormat[]		= _T("SizeFormat");
 CONST TCHAR DateFormat[]		= _T("DateFormat");
-CONST TCHAR FilterHistory[]		= _T("FilterHistory");
+CONST TCHAR FilterHistory[]	= _T("FilterHistory");
 CONST TCHAR LastFilter[]		= _T("LastFilter");
 CONST TCHAR TimeOut[]			= _T("TimeOut");
 CONST TCHAR UseSystemIcons[]	= _T("UseSystemIcons");
@@ -112,7 +112,7 @@ BOOL				isNotepadCreated	= FALSE;
 CONST TCHAR			LastElement[]		= _T("LastElement");
 
 /* for subclassing */
-WNDPROC				wndProcNotepad		= NULL;
+WNDPROC				wndProcNotepad	= NULL;
 
 /* win version */
 winVer				gWinVersion			= WV_UNKNOWN;
@@ -404,7 +404,8 @@ void loadSettings(void)
 			exProp.vStrFilterHistory.push_back(pszTemp);
 	}
 	::GetPrivateProfileString(Explorer, LastFilter, _T("*.*"), pszTemp, MAX_PATH, iniFilePath);
-	exProp.strLastFilter = pszTemp;
+    wstring str = pszTemp;
+	exProp.strLastFilter = std::move( str );
 
 	if (::PathFileExists(exProp.szCurrentPath) == FALSE)
 		_tcscpy(exProp.szCurrentPath, _T("C:\\"));

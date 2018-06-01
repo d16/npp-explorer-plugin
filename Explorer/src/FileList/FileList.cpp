@@ -1941,9 +1941,9 @@ void FileList::GetFilterLists(LPTSTR pszFilter, LPTSTR pszExFilter)
 BOOL FileList::DoFilter(LPCTSTR pszFileName, LPTSTR pszFilter, LPTSTR pszExFilter)
 {
 	TCHAR	TEMP[256];
-	LPTSTR	ptr		= NULL;
+	LPTSTR	ptr		= nullptr;
 
-	if ((pszFileName == NULL) || (pszFilter == NULL) || (pszExFilter == NULL))
+	if ((pszFileName == nullptr ) || (pszFilter == nullptr ) || (pszExFilter == nullptr ))
 		return FALSE;
 
 	if (_tcsicmp(pszFilter, _T("*.*")) == 0)
@@ -1954,11 +1954,11 @@ BOOL FileList::DoFilter(LPCTSTR pszFileName, LPTSTR pszFilter, LPTSTR pszExFilte
 		_tcsncpy(TEMP, pszExFilter, 256);
 
 		ptr		= _tcstok(TEMP, _T(";"));
-		while (ptr != NULL)
+		while (ptr != nullptr )
 		{
-			if (WildCmp(pszFileName, ptr) != NULL)
+			if (WildCmp(pszFileName, ptr) != 0 )
 				return FALSE;
-			ptr = _tcstok(NULL, _T(";"));
+			ptr = _tcstok( nullptr, L";");
 		}
 	}
 
